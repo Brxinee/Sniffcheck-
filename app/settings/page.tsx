@@ -1,0 +1,2 @@
+import { requireOwner } from "@/lib/auth";
+export default async function Settings(){await requireOwner(); return <main className="min-h-screen p-6"><h1 className="text-3xl font-black">Settings</h1><div className="mt-6 glass rounded-3xl p-5"><p>Telegram bot token: {process.env.TELEGRAM_BOT_TOKEN?"Configured":"Missing"}</p><p>Channel ID: {process.env.TELEGRAM_CHANNEL_ID?"Configured":"Missing"}</p><p className="text-white/50">Secrets are read server-side only and never exposed to the browser.</p></div></main>}
