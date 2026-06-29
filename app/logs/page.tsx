@@ -1,0 +1,2 @@
+import { prisma } from "@/lib/db";import { requireOwner } from "@/lib/auth";
+export default async function Logs(){await requireOwner(); const logs=await prisma.publishLog.findMany({orderBy:{createdAt:"desc"},take:100}); return <main className="min-h-screen p-6"><h1 className="text-3xl font-black">Publish logs</h1><div className="mt-6 space-y-3">{logs.map(l=><pre key={l.id} className="overflow-auto rounded-2xl bg-white/10 p-4 text-xs">{JSON.stringify(l,null,2)}</pre>)}</div></main>}
