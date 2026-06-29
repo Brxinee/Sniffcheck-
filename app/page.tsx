@@ -1,0 +1,14 @@
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <main className="min-h-screen overflow-hidden px-6 py-10">
+      <section className="mx-auto max-w-6xl rounded-[2rem] glass p-8 shadow-glow animate-fade-up">
+        <p className="text-primary">Smelloff Scheduler</p>
+        <h1 className="mt-6 max-w-3xl text-5xl font-black tracking-tight md:text-7xl">Unlimited Telegram scheduling for SmelloffIndia.</h1>
+        <p className="mt-6 max-w-2xl text-white/65">Create, preview, queue, and automatically publish premium Telegram content with media, recurrence, logs, and AI-assisted odor post generation.</p>
+        <Link href="/dashboard" className="mt-8 inline-flex rounded-full bg-primary px-6 py-3 font-bold text-black">Open dashboard</Link>
+      </section>
+    </main>
+  );
+}

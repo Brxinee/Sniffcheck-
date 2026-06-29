@@ -1,0 +1,2 @@
+import type { Config } from "tailwindcss";
+export default { darkMode: ["class"], content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"], theme: { extend: { colors: { background: "#080808", primary: "#B8FF57" }, boxShadow: { glow: "0 0 40px rgba(184,255,87,.25)" }, animation: { "fade-up": "fadeUp .45s ease-out both" }, keyframes: { fadeUp: { from: { opacity: "0", transform: "translateY(12px)" }, to: { opacity: "1", transform: "translateY(0)" } } } } }, plugins: [require("tailwindcss-animate")] } satisfies Config;

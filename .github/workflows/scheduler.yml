@@ -1,0 +1,20 @@
+name: Smelloff Scheduler
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  publish-due-posts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger scheduler
+        env:
+          SCHEDULER_URL: ${{ secrets.SCHEDULER_URL }}
+          SCHEDULER_SECRET: ${{ secrets.SCHEDULER_SECRET }}
+        run: |
+          curl --fail --show-error --silent \
+            --request POST "$SCHEDULER_URL/api/scheduler" \
+            --header "Authorization: Bearer $SCHEDULER_SECRET" \
+            --header "Content-Type: application/json"

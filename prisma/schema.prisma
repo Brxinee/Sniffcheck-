@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHING
+  PUBLISHED
+  FAILED
+}
+
+enum ParseMode {
+  MARKDOWNV2
+  HTML
+}
+
+enum RecurrenceFrequency {
+  NONE
+  DAILY
+  WEEKLY
+  MONTHLY
+  EVERY_X_HOURS
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+model Post {
+  id                    String              @id @default(cuid())
+  title                 String
+  body                  String
+  status                PostStatus          @default(DRAFT)
+  parseMode             ParseMode           @default(HTML)
+  scheduledAt           DateTime?
+  timezone              String              @default("UTC")
+  silent                Boolean             @default(false)
+  disableNotification   Boolean             @default(false)
+  buttons               Json?
+  poll                  Json?
+  recurrenceFrequency   RecurrenceFrequency @default(NONE)
+  recurrenceInterval    Int?
+  retryCount            Int                 @default(0)
+  lastError             String?
+  publishLockId         String?             @unique
+  publishStartedAt      DateTime?
+  telegramMessageIds    Json?
+  publishedAt           DateTime?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  media                 PostMedia[]
+  logs                  PublishLog[]
+
+  @@index([status, scheduledAt])
+  @@index([status, retryCount])
+  @@index([publishedAt])
+}
+
+model MediaAsset {
+  id        String      @id @default(cuid())
+  name      String
+  url       String
+  type      MediaType
+  folder    String      @default("General")
+  size      Int?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  posts     PostMedia[]
+
+  @@index([folder])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model PostMedia {
+  postId  String
+  mediaId String
+  order   Int        @default(0)
+  post    Post       @relation(fields: [postId], references: [id], onDelete: Cascade)
+  media   MediaAsset @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@id([postId, mediaId])
+  @@index([mediaId])
+}
+
+model PublishLog {
+  id         String   @id @default(cuid())
+  postId     String?
+  success    Boolean
+  action     String   @default("publish")
+  response   Json?
+  error      String?
+  retry      Int      @default(0)
+  telegramId String?
+  createdAt  DateTime @default(now())
+  post       Post?    @relation(fields: [postId], references: [id], onDelete: SetNull)
+
+  @@index([postId, createdAt])
+  @@index([success, createdAt])
+}
